@@ -16,16 +16,17 @@ class ListNotesActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.list_notes_activity)
 
-
-        val notesDao = NotesDAO()
-
-        for(i in 0..10000) {
-            notesDao.add(Note("Title $i", "Description $i"))
-        }
-
-        val allNotes: List<Note> = notesDao.all
-
+        val allNotes: List<Note> = fetchNotes()
         configureRecyclerView(allNotes)
+    }
+
+    private fun fetchNotes(): List<Note> =
+        NotesDAO().all
+
+    override fun onResume() {
+        val allNotes: List<Note> = fetchNotes()
+        configureRecyclerView(allNotes)
+        super.onResume()
     }
 
     private fun configureRecyclerView(allNotes: List<Note>) {
