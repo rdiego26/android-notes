@@ -1,6 +1,8 @@
 package me.diegoramos.ceep.ui
 
+import android.content.Intent
 import android.os.Bundle
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import kotlinx.android.synthetic.main.list_notes_activity.*
 import me.diegoramos.ceep.R
@@ -28,6 +30,11 @@ class ListNotesActivity : AppCompatActivity() {
 
     private fun configureRecyclerView(allNotes: List<Note>) {
         list_notes.adapter = ListNotesAdapter(allNotes)
+    }
+
+    fun goToFormNote(view: View) {
+        val intent = Intent(applicationContext, FormNoteActivity::class.java)
+        startActivity(intent)
     }
 
 }

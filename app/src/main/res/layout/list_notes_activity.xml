@@ -30,6 +30,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:padding="10dp"
+        android:onClick="goToFormNote"
         android:text="@string/list_notes_activity_footer_new_note"
         tools:text="Inserir uma nota"
         android:textColor="@android:color/darker_gray"
