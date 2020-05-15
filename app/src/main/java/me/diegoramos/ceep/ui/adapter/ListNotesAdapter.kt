@@ -3,9 +3,8 @@ package me.diegoramos.ceep.ui.adapter;
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-
+import kotlinx.android.synthetic.main.note_item.view.*
 import me.diegoramos.ceep.R
 import me.diegoramos.ceep.model.Note
 
@@ -22,21 +21,13 @@ class ListNotesAdapter(private val list: List<Note>) : RecyclerView.Adapter<List
         holder.bind(list[position])
     }
 
-
 }
 
 class ListNoteViewHolder(inflater: LayoutInflater, parent: ViewGroup) :
     RecyclerView.ViewHolder(inflater.inflate(R.layout.note_item, parent, false)) {
-    private var titleView: TextView? = null
-    private var descriptionView: TextView? = null
-
-    init {
-        titleView = itemView.findViewById(R.id.note_item_title)
-        descriptionView = itemView.findViewById(R.id.note_item_description)
-    }
 
     fun bind(note: Note) {
-        titleView?.text = note.title
-        descriptionView?.text = note.description
+        itemView.note_item_title.text = note.title
+        itemView.note_item_description.text = note.description
     }
 }
