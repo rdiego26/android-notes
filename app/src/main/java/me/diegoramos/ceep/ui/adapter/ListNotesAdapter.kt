@@ -8,7 +8,7 @@ import kotlinx.android.synthetic.main.note_item.view.*
 import me.diegoramos.ceep.R
 import me.diegoramos.ceep.model.Note
 
-class ListNotesAdapter(private val list: List<Note>) : RecyclerView.Adapter<ListNoteViewHolder>() {
+class ListNotesAdapter(private val list: MutableList<Note>) : RecyclerView.Adapter<ListNoteViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ListNoteViewHolder {
         val inflater = LayoutInflater.from(parent.context)
@@ -20,6 +20,12 @@ class ListNotesAdapter(private val list: List<Note>) : RecyclerView.Adapter<List
     override fun onBindViewHolder(holder: ListNoteViewHolder, position: Int) {
         holder.bind(list[position])
     }
+
+    fun addNote(note: Note) {
+        list.add(note)
+        notifyDataSetChanged()
+    }
+
 
 }
 

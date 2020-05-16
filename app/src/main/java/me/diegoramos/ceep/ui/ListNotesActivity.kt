@@ -2,13 +2,13 @@ package me.diegoramos.ceep.ui
 
 import android.content.Intent
 import android.os.Bundle
-import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import kotlinx.android.synthetic.main.list_notes_activity.*
 import me.diegoramos.ceep.R
 import me.diegoramos.ceep.dao.NotesDAO
 import me.diegoramos.ceep.model.Note
 import me.diegoramos.ceep.ui.adapter.ListNotesAdapter
+import me.diegoramos.ceep.util.Constants
 
 class ListNotesActivity : AppCompatActivity() {
 
@@ -16,26 +16,35 @@ class ListNotesActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.list_notes_activity)
 
-        val allNotes: List<Note> = fetchNotes()
-        configureRecyclerView(allNotes)
+        configureRecyclerView()
+        configureLinkToForm()
     }
 
-    private fun fetchNotes(): List<Note> =
-        NotesDAO().all
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        if (requestCode == Constants.createdNoteRequestCode()
+            && resultCode == Constants.createdNoteResultCode()
+            && data?.hasExtra(Constants.createdNoteExtraName())!!) {
+            addItemOnAdapter(data)
+        }
 
-    override fun onResume() {
-        val allNotes: List<Note> = fetchNotes()
-        configureRecyclerView(allNotes)
-        super.onResume()
+        super.onActivityResult(requestCode, resultCode, data)
     }
 
-    private fun configureRecyclerView(allNotes: List<Note>) {
-        list_notes.adapter = ListNotesAdapter(allNotes)
+    private fun addItemOnAdapter(data: Intent) {
+        val receivedNote: Note = data.getSerializableExtra(Constants.createdNoteExtraName()) as Note
+        ((this.list_notes.adapter) as ListNotesAdapter).addNote(receivedNote)
+        this.list_notes.adapter?.notifyDataSetChanged()
     }
 
-    fun goToFormNote(view: View) {
-        val intent = Intent(applicationContext, FormNoteActivity::class.java)
-        startActivity(intent)
+    private fun configureRecyclerView() {
+        this.list_notes.adapter = ListNotesAdapter(NotesDAO().all)
+    }
+
+    private fun configureLinkToForm() {
+        list_notes_activity_footer_text.setOnClickListener {
+            val intent = Intent(applicationContext, FormNoteActivity::class.java)
+            startActivityForResult(intent, Constants.createdNoteRequestCode())
+        }
     }
 
 }

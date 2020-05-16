@@ -1,5 +1,6 @@
 package me.diegoramos.ceep.ui
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
@@ -8,6 +9,7 @@ import kotlinx.android.synthetic.main.form_note_activity.*
 import me.diegoramos.ceep.R
 import me.diegoramos.ceep.dao.NotesDAO
 import me.diegoramos.ceep.model.Note
+import me.diegoramos.ceep.util.Constants
 
 class FormNoteActivity : AppCompatActivity() {
 
@@ -24,10 +26,19 @@ class FormNoteActivity : AppCompatActivity() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         if (item.itemId == R.id.form_note_menu_add) {
-            val note = Note(form_note_title.text.toString(), form_note_description.text.toString())
-            NotesDAO().add(note)
+            val createdNote = Note(form_note_title.text.toString(), form_note_description.text.toString())
+            NotesDAO().add(createdNote)
+            setResult(Constants.createdNoteResultCode(), prepareResult(createdNote))
+            finish()
         }
         return super.onOptionsItemSelected(item)
+    }
+
+    private fun prepareResult(note: Note): Intent {
+        val intent = Intent()
+        intent.putExtra(Constants.createdNoteExtraName(), note)
+
+        return intent
     }
 
 }
