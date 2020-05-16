@@ -21,14 +21,24 @@ class ListNotesActivity : AppCompatActivity() {
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        if (requestCode == Constants.createdNoteRequestCode()
-            && resultCode == Constants.createdNoteResultCode()
-            && data?.hasExtra(Constants.createdNoteExtraName())!!) {
-            addItemOnAdapter(data)
+        if (isCreateNoteRequest(requestCode)
+            && isCreateNoteResult(resultCode)
+            && hasNote(data)
+        ) {
+            addItemOnAdapter(data!!)
         }
 
         super.onActivityResult(requestCode, resultCode, data)
     }
+
+    private fun hasNote(data: Intent?) =
+        data?.hasExtra(Constants.createdNoteExtraName())!!
+
+    private fun isCreateNoteResult(resultCode: Int) =
+        resultCode == Constants.createdNoteResultCode()
+
+    private fun isCreateNoteRequest(requestCode: Int) =
+        requestCode == Constants.createdNoteRequestCode()
 
     private fun addItemOnAdapter(data: Intent) {
         val receivedNote: Note = data.getSerializableExtra(Constants.createdNoteExtraName()) as Note
