@@ -32,28 +32,32 @@ class ListNotesActivity : AppCompatActivity() {
     }
 
     private fun hasNote(data: Intent?) =
-        data?.hasExtra(Constants.createdNoteExtraName())!!
+        data?.hasExtra(Constants.CREATED_NOTE_EXTRA_NAME)!!
 
     private fun isCreateNoteResult(resultCode: Int) =
-        resultCode == Constants.createdNoteResultCode()
+        resultCode == Constants.CREATED_NOTE_RESULT_CODE
 
     private fun isCreateNoteRequest(requestCode: Int) =
-        requestCode == Constants.createdNoteRequestCode()
+        requestCode == Constants.CREATE_NOTE_REQUEST_CODE
 
     private fun addItemOnAdapter(data: Intent) {
-        val receivedNote: Note = data.getSerializableExtra(Constants.createdNoteExtraName()) as Note
+        val receivedNote: Note = data.getSerializableExtra(Constants.CREATED_NOTE_EXTRA_NAME) as Note
         ((this.list_notes.adapter) as ListNotesAdapter).addNote(receivedNote)
         this.list_notes.adapter?.notifyDataSetChanged()
     }
 
     private fun configureRecyclerView() {
-        this.list_notes.adapter = ListNotesAdapter(NotesDAO().all)
+        this.list_notes.adapter = ListNotesAdapter(NotesDAO().all) {
+            val intent = Intent(applicationContext, FormNoteActivity::class.java)
+            intent.putExtra(Constants.NOTE_EXTRA_NAME, it)
+            startActivityForResult(intent, Constants.UPDATE_NOTE_REQUEST_CODE)
+        }
     }
 
     private fun configureLinkToForm() {
         list_notes_activity_footer_text.setOnClickListener {
             val intent = Intent(applicationContext, FormNoteActivity::class.java)
-            startActivityForResult(intent, Constants.createdNoteRequestCode())
+            startActivityForResult(intent, Constants.CREATE_NOTE_REQUEST_CODE)
         }
     }
 
