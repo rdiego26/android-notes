@@ -13,8 +13,12 @@ import me.diegoramos.ceep.util.Constants
 
 class FormNoteActivity : AppCompatActivity() {
 
+    companion object {
+        const val INVALID_POSITION: Int = -1
+    }
+
     private var receivedNote: Note? = null
-    private var receivedNotePosition: Int? = null
+    private var receivedNotePosition: Int = INVALID_POSITION
     private var isEditMode: Boolean = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -26,7 +30,7 @@ class FormNoteActivity : AppCompatActivity() {
     }
 
     private fun handleFormMode() {
-        isEditMode = isEditMode(intent)
+        isEditMode = hasReceivedNote(intent)
     }
 
     private fun handleReceivedData() {
@@ -34,13 +38,14 @@ class FormNoteActivity : AppCompatActivity() {
             val receivedData = intent
             receivedNote =
                 receivedData.getSerializableExtra(Constants.NOTE_EXTRA_NAME) as Note
-            receivedNotePosition = receivedData.getIntExtra(Constants.NOTE_POSITION_EXTRA_NAME, -1)
+            receivedNotePosition = receivedData.getIntExtra(Constants.NOTE_POSITION_EXTRA_NAME,
+                INVALID_POSITION)
             form_note_title.setText(receivedNote?.title)
             form_note_description.setText(receivedNote?.description)
         }
     }
 
-    private fun isEditMode(intent: Intent) =
+    private fun hasReceivedNote(intent: Intent) =
         intent.hasExtra(Constants.NOTE_EXTRA_NAME)
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -53,7 +58,7 @@ class FormNoteActivity : AppCompatActivity() {
             val createdNote = Note(form_note_title.text.toString(), form_note_description.text.toString())
 
             if (isEditMode) {
-                NotesDAO().update(receivedNotePosition!!, receivedNote)
+                NotesDAO().update(receivedNotePosition, receivedNote)
             } else {
                 NotesDAO().add(createdNote)
             }

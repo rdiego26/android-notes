@@ -50,7 +50,6 @@ class ListNotesActivity : AppCompatActivity(), OnItemClickListener {
     private fun addItemOnAdapter(data: Intent) {
         val receivedNote: Note = data.getSerializableExtra(Constants.CREATED_NOTE_EXTRA_NAME) as Note
         ((this.list_notes.adapter) as ListNotesAdapter).addNote(receivedNote)
-//        this.list_notes.adapter?.notifyDataSetChanged()
     }
 
     private fun updateItemOnAdapter(data: Intent) {
