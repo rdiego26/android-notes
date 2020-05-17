@@ -30,6 +30,10 @@ class ListNotesAdapter(private val list: MutableList<Note>,
         notifyDataSetChanged()
     }
 
+    fun updateNote(note: Note, position: Int) {
+        list[position] = note
+        notifyItemChanged(position)
+    }
 
 }
 

@@ -22,10 +22,11 @@ class ListNotesActivity : AppCompatActivity(), OnItemClickListener {
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        if (isCreateNoteRequest(requestCode) && isCreateNoteResult(resultCode) && hasNote(data)) {
+        if (isCreateNoteRequest(requestCode) && isSaveNoteResult(resultCode) && hasNote(data)) {
             addItemOnAdapter(data!!)
-        } else if(isUpdateNoteRequest(requestCode) && isUpdateNoteResult(resultCode) && hasNote(data)) {
-
+        } else if(isUpdateNoteRequest(requestCode) && isSaveNoteResult(resultCode) && hasNote(data)
+            && hasNotePosition(data)) {
+            updateItemOnAdapter(data!!)
         }
 
         super.onActivityResult(requestCode, resultCode, data)
@@ -34,14 +35,14 @@ class ListNotesActivity : AppCompatActivity(), OnItemClickListener {
     private fun hasNote(data: Intent?) =
         data?.hasExtra(Constants.CREATED_NOTE_EXTRA_NAME)!!
 
-    private fun isCreateNoteResult(resultCode: Int) =
-        resultCode == Constants.CREATED_NOTE_RESULT_CODE
+    private fun hasNotePosition(data: Intent?) =
+        data?.hasExtra(Constants.NOTE_POSITION_EXTRA_NAME)!!
+
+    private fun isSaveNoteResult(resultCode: Int) =
+        resultCode == Constants.SAVED_NOTE_RESULT_CODE
 
     private fun isCreateNoteRequest(requestCode: Int) =
         requestCode == Constants.CREATE_NOTE_REQUEST_CODE
-
-    private fun isUpdateNoteResult(resultCode: Int) =
-        resultCode == Constants.UPDATED_NOTE_RESULT_CODE
 
     private fun isUpdateNoteRequest(requestCode: Int) =
         requestCode == Constants.UPDATE_NOTE_REQUEST_CODE
@@ -49,11 +50,18 @@ class ListNotesActivity : AppCompatActivity(), OnItemClickListener {
     private fun addItemOnAdapter(data: Intent) {
         val receivedNote: Note = data.getSerializableExtra(Constants.CREATED_NOTE_EXTRA_NAME) as Note
         ((this.list_notes.adapter) as ListNotesAdapter).addNote(receivedNote)
-        this.list_notes.adapter?.notifyDataSetChanged()
+//        this.list_notes.adapter?.notifyDataSetChanged()
+    }
+
+    private fun updateItemOnAdapter(data: Intent) {
+        val receivedNote: Note = data.getSerializableExtra(Constants.CREATED_NOTE_EXTRA_NAME) as Note
+        val receivedNotePosition: Int = data.getIntExtra(Constants.NOTE_POSITION_EXTRA_NAME, -1)
+        ((this.list_notes.adapter) as ListNotesAdapter).updateNote(receivedNote, receivedNotePosition)
+
     }
 
     private fun configureRecyclerView() {
-        this.list_notes.adapter = ListNotesAdapter(NotesDAO().all)
+        this.list_notes.adapter = ListNotesAdapter(NotesDAO().all, this)
     }
 
     private fun configureLinkToForm() {

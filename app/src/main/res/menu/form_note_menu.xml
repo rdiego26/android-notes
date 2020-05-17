@@ -2,7 +2,7 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
-        android:id="@+id/form_note_menu_add"
+        android:id="@+id/form_note_menu_save"
         android:title="@string/form_note_menu_add_note"
         android:icon="@drawable/ic_form_note_done"
         app:showAsAction="always">

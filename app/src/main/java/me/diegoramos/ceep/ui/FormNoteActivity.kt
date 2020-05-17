@@ -13,22 +13,35 @@ import me.diegoramos.ceep.util.Constants
 
 class FormNoteActivity : AppCompatActivity() {
 
+    private var receivedNote: Note? = null
+    private var receivedNotePosition: Int? = null
+    private var isEditMode: Boolean = false
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.form_note_activity)
 
+        handleFormMode()
         handleReceivedData()
     }
 
+    private fun handleFormMode() {
+        isEditMode = isEditMode(intent)
+    }
+
     private fun handleReceivedData() {
-        val receivedData = intent
-        if (receivedData.hasExtra(Constants.NOTE_EXTRA_NAME)) {
-            val receivedNote: Note =
+        if (isEditMode) {
+            val receivedData = intent
+            receivedNote =
                 receivedData.getSerializableExtra(Constants.NOTE_EXTRA_NAME) as Note
-            form_note_title.setText(receivedNote.title)
-            form_note_description.setText(receivedNote.description)
+            receivedNotePosition = receivedData.getIntExtra(Constants.NOTE_POSITION_EXTRA_NAME, -1)
+            form_note_title.setText(receivedNote?.title)
+            form_note_description.setText(receivedNote?.description)
         }
     }
+
+    private fun isEditMode(intent: Intent) =
+        intent.hasExtra(Constants.NOTE_EXTRA_NAME)
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.form_note_menu, menu)
@@ -36,18 +49,26 @@ class FormNoteActivity : AppCompatActivity() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        if (item.itemId == R.id.form_note_menu_add) {
+        if (item.itemId == R.id.form_note_menu_save) {
             val createdNote = Note(form_note_title.text.toString(), form_note_description.text.toString())
-            NotesDAO().add(createdNote)
-            setResult(Constants.CREATED_NOTE_RESULT_CODE, prepareResult(createdNote))
+
+            if (isEditMode) {
+                NotesDAO().update(receivedNotePosition!!, receivedNote)
+            } else {
+                NotesDAO().add(createdNote)
+            }
+
+            setResult(Constants.SAVED_NOTE_RESULT_CODE, prepareResult(createdNote))
             finish()
         }
+
         return super.onOptionsItemSelected(item)
     }
 
     private fun prepareResult(note: Note): Intent {
         val intent = Intent()
         intent.putExtra(Constants.CREATED_NOTE_EXTRA_NAME, note)
+        intent.putExtra(Constants.NOTE_POSITION_EXTRA_NAME, receivedNotePosition)
 
         return intent
     }
