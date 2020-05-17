@@ -8,9 +8,10 @@ import me.diegoramos.ceep.R
 import me.diegoramos.ceep.dao.NotesDAO
 import me.diegoramos.ceep.model.Note
 import me.diegoramos.ceep.ui.adapter.ListNotesAdapter
+import me.diegoramos.ceep.ui.adapter.listener.OnItemClickListener
 import me.diegoramos.ceep.util.Constants
 
-class ListNotesActivity : AppCompatActivity() {
+class ListNotesActivity : AppCompatActivity(), OnItemClickListener {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -21,11 +22,10 @@ class ListNotesActivity : AppCompatActivity() {
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        if (isCreateNoteRequest(requestCode)
-            && isCreateNoteResult(resultCode)
-            && hasNote(data)
-        ) {
+        if (isCreateNoteRequest(requestCode) && isCreateNoteResult(resultCode) && hasNote(data)) {
             addItemOnAdapter(data!!)
+        } else if(isUpdateNoteRequest(requestCode) && isUpdateNoteResult(resultCode) && hasNote(data)) {
+
         }
 
         super.onActivityResult(requestCode, resultCode, data)
@@ -40,6 +40,12 @@ class ListNotesActivity : AppCompatActivity() {
     private fun isCreateNoteRequest(requestCode: Int) =
         requestCode == Constants.CREATE_NOTE_REQUEST_CODE
 
+    private fun isUpdateNoteResult(resultCode: Int) =
+        resultCode == Constants.UPDATED_NOTE_RESULT_CODE
+
+    private fun isUpdateNoteRequest(requestCode: Int) =
+        requestCode == Constants.UPDATE_NOTE_REQUEST_CODE
+
     private fun addItemOnAdapter(data: Intent) {
         val receivedNote: Note = data.getSerializableExtra(Constants.CREATED_NOTE_EXTRA_NAME) as Note
         ((this.list_notes.adapter) as ListNotesAdapter).addNote(receivedNote)
@@ -47,11 +53,7 @@ class ListNotesActivity : AppCompatActivity() {
     }
 
     private fun configureRecyclerView() {
-        this.list_notes.adapter = ListNotesAdapter(NotesDAO().all) {
-            val intent = Intent(applicationContext, FormNoteActivity::class.java)
-            intent.putExtra(Constants.NOTE_EXTRA_NAME, it)
-            startActivityForResult(intent, Constants.UPDATE_NOTE_REQUEST_CODE)
-        }
+        this.list_notes.adapter = ListNotesAdapter(NotesDAO().all)
     }
 
     private fun configureLinkToForm() {
@@ -59,6 +61,13 @@ class ListNotesActivity : AppCompatActivity() {
             val intent = Intent(applicationContext, FormNoteActivity::class.java)
             startActivityForResult(intent, Constants.CREATE_NOTE_REQUEST_CODE)
         }
+    }
+
+    override fun onItemClick(note: Note, position: Int) {
+        val intent = Intent(applicationContext, FormNoteActivity::class.java)
+        intent.putExtra(Constants.NOTE_EXTRA_NAME, note)
+        intent.putExtra(Constants.NOTE_POSITION_EXTRA_NAME, position)
+        startActivityForResult(intent, Constants.UPDATE_NOTE_REQUEST_CODE)
     }
 
 }
