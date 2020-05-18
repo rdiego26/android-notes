@@ -5,12 +5,14 @@ import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.ItemTouchHelper
 import kotlinx.android.synthetic.main.list_notes_activity.*
 import me.diegoramos.ceep.R
 import me.diegoramos.ceep.dao.NotesDAO
 import me.diegoramos.ceep.model.Note
 import me.diegoramos.ceep.ui.adapter.ListNotesAdapter
 import me.diegoramos.ceep.ui.adapter.listener.OnItemClickListener
+import me.diegoramos.ceep.ui.helper.NoteItemTouchHelperCallback
 import me.diegoramos.ceep.util.Constants
 
 class ListNotesActivity : AppCompatActivity(), OnItemClickListener {
@@ -84,6 +86,8 @@ class ListNotesActivity : AppCompatActivity(), OnItemClickListener {
 
     private fun configureRecyclerView() {
         this.list_notes.adapter = ListNotesAdapter(NotesDAO().all, this)
+        val itemTouchHelper = ItemTouchHelper(NoteItemTouchHelperCallback((this.list_notes.adapter) as ListNotesAdapter))
+        itemTouchHelper.attachToRecyclerView(this.list_notes)
     }
 
     private fun configureLinkToForm() {

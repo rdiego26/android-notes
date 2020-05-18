@@ -35,6 +35,11 @@ class ListNotesAdapter(private val list: MutableList<Note>,
         notifyItemChanged(position)
     }
 
+    fun removeNote(position: Int) {
+        list.removeAt(position)
+        notifyItemRemoved(position)
+    }
+
 }
 
 class ListNoteViewHolder(inflater: LayoutInflater, parent: ViewGroup) :
