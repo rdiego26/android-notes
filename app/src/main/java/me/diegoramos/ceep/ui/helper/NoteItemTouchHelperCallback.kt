@@ -24,14 +24,18 @@ class NoteItemTouchHelperCallback(private val listNotesAdapter: ListNotesAdapter
     ): Boolean {
         val initialPosition = viewHolder.adapterPosition
         val newPosition = target.adapterPosition
-        NotesDAO().changePosition(initialPosition, newPosition)
-        listNotesAdapter.changePosition(initialPosition, newPosition)
+        changeNotesPosition(initialPosition, newPosition)
         return true
     }
 
     override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
         NotesDAO().remove(viewHolder.adapterPosition)
         listNotesAdapter.removeNote(viewHolder.adapterPosition)
+    }
+
+    private fun changeNotesPosition(initialPosition: Int, newPosition: Int) {
+        NotesDAO().changePosition(initialPosition, newPosition)
+        listNotesAdapter.changePosition(initialPosition, newPosition)
     }
 
 }
