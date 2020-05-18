@@ -22,15 +22,27 @@ class ListNotesActivity : AppCompatActivity(), OnItemClickListener {
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        if (isCreateNoteRequest(requestCode) && isSaveNoteResult(resultCode) && hasNote(data)) {
+        if (isResultForCreate(requestCode, resultCode, data)) {
             addItemOnAdapter(data!!)
-        } else if(isUpdateNoteRequest(requestCode) && isSaveNoteResult(resultCode) && hasNote(data)
-            && hasNotePosition(data)) {
+        } else if(isResultForUpdate(requestCode, resultCode, data)) {
             updateItemOnAdapter(data!!)
         }
 
         super.onActivityResult(requestCode, resultCode, data)
     }
+
+    private fun isResultForUpdate(
+        requestCode: Int,
+        resultCode: Int,
+        data: Intent?
+    ) = (isUpdateNoteRequest(requestCode) && isSaveNoteResult(resultCode) && hasNote(data)
+                && hasNotePosition(data))
+
+    private fun isResultForCreate(
+        requestCode: Int,
+        resultCode: Int,
+        data: Intent?
+    ) = isCreateNoteRequest(requestCode) && isSaveNoteResult(resultCode) && hasNote(data)
 
     private fun hasNote(data: Intent?) =
         data?.hasExtra(Constants.CREATED_NOTE_EXTRA_NAME)!!
