@@ -1,5 +1,6 @@
 package me.diegoramos.ceep.ui
 
+import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
@@ -63,7 +64,7 @@ class FormNoteActivity : AppCompatActivity() {
                 NotesDAO().add(createdNote)
             }
 
-            setResult(Constants.SAVED_NOTE_RESULT_CODE, prepareResult(createdNote))
+            setResult(Activity.RESULT_OK, prepareResult(createdNote))
             finish()
         }
 

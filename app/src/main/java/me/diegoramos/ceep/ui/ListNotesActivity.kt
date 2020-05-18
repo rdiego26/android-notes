@@ -1,7 +1,9 @@
 package me.diegoramos.ceep.ui
 
+import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import kotlinx.android.synthetic.main.list_notes_activity.*
 import me.diegoramos.ceep.R
@@ -22,36 +24,45 @@ class ListNotesActivity : AppCompatActivity(), OnItemClickListener {
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        if (isResultForCreate(requestCode, resultCode, data)) {
-            addItemOnAdapter(data!!)
-        } else if(isResultForUpdate(requestCode, resultCode, data)) {
-            updateItemOnAdapter(data!!)
+        if (isResultForCreate(requestCode)) {
+            if (isCanceledResult(resultCode)) {
+                Toast.makeText(applicationContext, R.string.operation_canceled, Toast.LENGTH_SHORT)
+                    .show()
+            } else if(isOkResult(resultCode) && hasNote(data)) {
+                addItemOnAdapter(data!!)
+            }
+        } else if(isResultForUpdate(requestCode)) {
+            if (isCanceledResult(resultCode)) {
+                Toast.makeText(applicationContext, R.string.operation_canceled, Toast.LENGTH_SHORT)
+                    .show()
+            } else if(isOkResult(resultCode) && hasNote(data) && hasNotePosition(data)) {
+                updateItemOnAdapter(data!!)
+            }
         }
 
         super.onActivityResult(requestCode, resultCode, data)
     }
 
     private fun isResultForUpdate(
-        requestCode: Int,
-        resultCode: Int,
-        data: Intent?
-    ) = (isUpdateNoteRequest(requestCode) && isSaveNoteResult(resultCode) && hasNote(data)
-                && hasNotePosition(data))
+        requestCode: Int
+    ) = isUpdateNoteRequest(requestCode)
 
     private fun isResultForCreate(
-        requestCode: Int,
-        resultCode: Int,
-        data: Intent?
-    ) = isCreateNoteRequest(requestCode) && isSaveNoteResult(resultCode) && hasNote(data)
+        requestCode: Int
+    ) = isCreateNoteRequest(requestCode)
+
+    private fun isCanceledResult(
+        resultCode: Int
+    ) = resultCode == Activity.RESULT_CANCELED
+
+    private fun isOkResult(resultCode: Int) =
+        resultCode == Activity.RESULT_OK
 
     private fun hasNote(data: Intent?) =
         data?.hasExtra(Constants.CREATED_NOTE_EXTRA_NAME)!!
 
     private fun hasNotePosition(data: Intent?) =
         data?.hasExtra(Constants.NOTE_POSITION_EXTRA_NAME)!!
-
-    private fun isSaveNoteResult(resultCode: Int) =
-        resultCode == Constants.SAVED_NOTE_RESULT_CODE
 
     private fun isCreateNoteRequest(requestCode: Int) =
         requestCode == Constants.CREATE_NOTE_REQUEST_CODE
