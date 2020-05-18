@@ -92,7 +92,9 @@ class ListNotesActivity : AppCompatActivity(), OnItemClickListener {
 
     private fun configureItemTouchHelper() {
         val itemTouchHelper =
-            ItemTouchHelper(NoteItemTouchHelperCallback((this.list_notes.adapter) as ListNotesAdapter))
+            ItemTouchHelper(NoteItemTouchHelperCallback(
+                (this.list_notes.adapter) as ListNotesAdapter, applicationContext)
+            )
         itemTouchHelper.attachToRecyclerView(this.list_notes)
     }
 
