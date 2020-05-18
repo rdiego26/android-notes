@@ -20,6 +20,7 @@ class ListNotesActivity : AppCompatActivity(), OnItemClickListener {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.list_notes_activity)
+        setTitle(R.string.notes_list_app_bar_title)
 
         configureRecyclerView()
         configureLinkToForm()

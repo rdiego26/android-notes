@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Ceep</string>
+    <string name="notes_list_app_bar_title">Notes</string>
+    <string name="note_register_app_bar_title">Register Note</string>
+    <string name="note_change_app_bar_title">Update Note</string>
     <string name="operation_canceled">Operation canceled by user</string>
     <string name="list_notes_activity_footer_new_note">New Note</string>
     <string name="form_note_title_hint">Title</string>

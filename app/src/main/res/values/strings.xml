@@ -1,5 +1,8 @@
 <resources>
     <string name="app_name">Ceep</string>
+    <string name="notes_list_app_bar_title">Notas</string>
+    <string name="note_register_app_bar_title">Cadastrar Nota</string>
+    <string name="note_change_app_bar_title">Atualizar Nota</string>
     <string name="operation_canceled">Operação cancelada pelo usuário</string>
     <string name="list_notes_activity_footer_new_note">Inserir uma nota</string>
     <string name="form_note_title_hint">Título</string>

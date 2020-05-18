@@ -25,6 +25,7 @@ class FormNoteActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.form_note_activity)
+        setTitle(R.string.note_register_app_bar_title)
 
         handleFormMode()
         handleReceivedData()
@@ -36,6 +37,7 @@ class FormNoteActivity : AppCompatActivity() {
 
     private fun handleReceivedData() {
         if (isEditMode) {
+            setTitle(R.string.note_change_app_bar_title)
             val receivedData = intent
             receivedNote =
                 receivedData.getSerializableExtra(Constants.NOTE_EXTRA_NAME) as Note
