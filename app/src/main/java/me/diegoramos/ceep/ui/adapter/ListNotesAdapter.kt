@@ -8,6 +8,7 @@ import kotlinx.android.synthetic.main.note_item.view.*
 import me.diegoramos.ceep.R
 import me.diegoramos.ceep.model.Note
 import me.diegoramos.ceep.ui.adapter.listener.OnItemClickListener
+import java.util.*
 
 class ListNotesAdapter(private val list: MutableList<Note>,
                        private val itemClickListener: OnItemClickListener
@@ -38,6 +39,11 @@ class ListNotesAdapter(private val list: MutableList<Note>,
     fun removeNote(position: Int) {
         list.removeAt(position)
         notifyItemRemoved(position)
+    }
+
+    fun changePosition(initialPosition: Int, newPosition: Int) {
+        Collections.swap(list, initialPosition, newPosition)
+        notifyDataSetChanged()
     }
 
 }

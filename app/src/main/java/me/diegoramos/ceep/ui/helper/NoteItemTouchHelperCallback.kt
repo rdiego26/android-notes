@@ -10,15 +10,23 @@ class NoteItemTouchHelperCallback(private val listNotesAdapter: ListNotesAdapter
     override fun getMovementFlags(
         recyclerView: RecyclerView,
         viewHolder: RecyclerView.ViewHolder
-    ): Int =
-        makeMovementFlags(0, ItemTouchHelper.RIGHT.or(ItemTouchHelper.LEFT))
+    ): Int {
+        val dragFlags: Int = ItemTouchHelper.RIGHT.or(ItemTouchHelper.LEFT)
+            .or(ItemTouchHelper.UP).or(ItemTouchHelper.DOWN)
+        val swipeFlags: Int = ItemTouchHelper.RIGHT.or(ItemTouchHelper.LEFT)
+         return makeMovementFlags(dragFlags, swipeFlags)
+    }
 
     override fun onMove(
         recyclerView: RecyclerView,
         viewHolder: RecyclerView.ViewHolder,
         target: RecyclerView.ViewHolder
     ): Boolean {
-        TODO("Not yet implemented")
+        val initialPosition = viewHolder.adapterPosition
+        val newPosition = target.adapterPosition
+        NotesDAO().changePosition(initialPosition, newPosition)
+        listNotesAdapter.changePosition(initialPosition, newPosition)
+        return true
     }
 
     override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
