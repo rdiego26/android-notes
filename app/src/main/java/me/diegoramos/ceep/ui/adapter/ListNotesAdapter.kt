@@ -43,7 +43,7 @@ class ListNotesAdapter(private val list: MutableList<Note>,
 
     fun changePosition(initialPosition: Int, newPosition: Int) {
         Collections.swap(list, initialPosition, newPosition)
-        notifyDataSetChanged()
+        notifyItemMoved(initialPosition, newPosition)
     }
 
 }
